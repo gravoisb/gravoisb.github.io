@@ -3,7 +3,6 @@
 const chai = require('chai'),
     assert = chai.assert,
     expect = chai.expect,
-    should = chai.should(),
     sinon = require('sinon'),
     window = require('../test/windowMock.js'),
     opspark = window.opspark,
@@ -81,7 +80,15 @@ describe('Circularity', function() {
             expect(physikz.addRandomVelocity.calledOnce).to.be.true;
 
             var addRandomVelocityArgs = physikz.addRandomVelocity.firstCall.args;
-            expect(addRandomVelocityArgs.length).to.equal(2, "should call addRandomVelocity with 2 arguments");
+            expect(addRandomVelocityArgs.length).to.be.at.least(2, "should call addRandomVelocity with at least two arguments");
+
+            if(addRandomVelocityArgs.length > 2) {
+                expect(addRandomVelocityArgs[2]).to.be.a('number', 'the third argument of addRandomVelocity should be a number for VelocityX');
+            }
+            if(addRandomVelocityArgs.length > 3) {
+                expect(addRandomVelocityArgs[3]).to.be.a('number', 'the fourth argument of addRandomVelocity should be a number for VelocityY');
+            }
+
             expect(addRandomVelocityArgs[0].id === currentCircleID &&
                 addRandomVelocityArgs[0].name === 'circle', 'should pass circle to addRandomVelocity as the first argument').to.be.true;
             expect(addRandomVelocityArgs[1].name === 'canvas', 'should pass canvas addRandomVelocity as the second arguments').to.be.true;
@@ -215,7 +222,7 @@ describe('Circularity', function() {
         var iterates;
         before(function() {
             var updateString = game.update.toString().replace(/\s+/g, '');
-            iterates = updateString.includes('varcircle=circles[i]');
+            iterates = updateString.includes('varcircle=circles[i]'); // This checks to see if the iteration variable is named "circle"
         });
 
         it('should iterate over the circles Array and assign each element to the variable circle', function() {

@@ -11,6 +11,11 @@
         
         cursors = game.cursors = game.input.keyboard.createCursorKeys();
         game.input.keyboard.addCallbacks(this, onDown, onUp, onPress);
+
+        var wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        var aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        var sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+        var dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
         
         function onDown() {
             
@@ -40,18 +45,18 @@
         function update() {
             // todo : fix states to include velocity or keyup/cursorLeft //
             if (asset.body && player.getStateName() !== 'flyingJump') asset.body.velocity.x = 0;
-            if (cursors.left.isDown) {
+            if (cursors.left.isDown || aKey.isDown) {
                 player.setDirection(-1);
                 player.run();
-            } else if (cursors.right.isDown) {
+            } else if (cursors.right.isDown || dKey.isDown) {
                 player.setDirection(1);
                 player.run();
-            } else if (cursors.down.isDown) {
+            } else if (cursors.down.isDown || sKey.isDown) {
                 player.duck();
             } else {}
             
             //  Allow the player to jump if they are touching the ground.
-            if (cursors.up.isDown && asset.body.touching.down) {
+            if ((cursors.up.isDown || wKey.isDown) && asset.body.touching.down) {
                 player.flyingJump();
             }
         }
